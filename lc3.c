@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdint.h>
 #include <limits.h>
+#include "debug_tools.h"
 
 
 // Memory 0 -> 65535 = 65536 locations
@@ -17,7 +18,7 @@ enum
     R_R5,
     R_R6,
     R_R7,
-    R_PC, // Program counter
+    R_PC,     // Program counter
     R_COND, 
     R_COUNT
 };
@@ -54,7 +55,15 @@ enum
     FL_NEG = 1 << 2, // Negative
 };
 
+
 int main(int argc, char* const argv[])
 {
-    printf("%d", R_R7);
+    // Set PC to starting positon of 
+    // 0x3000
+    uint16_t const PC_START = 0x3000;
+    reg[R_PC] = PC_START;
+
+    uint16_t a = 0b0001101101000111;
+    printf("Compiled successfully!\n");
+    print_16bit(a);
 }
