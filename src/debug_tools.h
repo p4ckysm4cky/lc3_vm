@@ -9,4 +9,6 @@ int get_nth_bit(int num, int n);
 /* outputs the uint16 value to console */
 void print_16bit(uint16_t value);
 
+/* prints array */
+void print_array(uint16_t array[], int size);
 #endif

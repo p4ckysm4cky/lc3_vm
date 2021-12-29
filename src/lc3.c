@@ -56,7 +56,8 @@ enum
     FL_NEG = 1 << 2, // Negative
 };
 
-
+/* Extends a value less than 16 bit to be 
+correctly represented in a signed 16 bit format */
 uint16_t sign_extend(uint16_t x, int bit_count)
 {
     // Check if num is negative by checking
@@ -68,6 +69,19 @@ uint16_t sign_extend(uint16_t x, int bit_count)
     return x;
 }
 
+/* Sets condition codes, based on whether the
+16 bit 2's complement integer is ZERO, POSITIVE, or
+NEGATIVE */
+void update_flags(uint16_t r)
+{
+    if (reg[r] == 0)
+        reg[R_COND] = FL_ZRO;
+    else if (reg[r] >> 15) // If MSB is set (negative in 2's complement)
+        reg[R_COND] = FL_NEG;
+    else
+        reg[R_COND] = FL_POS;
+}
+
 
 int main(int argc, char* const argv[])
 {
@@ -75,5 +89,7 @@ int main(int argc, char* const argv[])
     // 0x3000
     uint16_t const PC_START = 0x3000;
     reg[R_PC] = PC_START;
-    test_sign_extend(0b01111, 5);
+    test_update_flags(reg, R_R0, 5);
+    test_update_flags(reg, R_R0, 0);
+    test_update_flags(reg, R_R0, -5);
 }

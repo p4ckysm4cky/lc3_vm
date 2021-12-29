@@ -22,3 +22,11 @@ void print_16bit(uint16_t value)
     }
     putchar('\n');
 }
+
+
+void print_array(uint16_t array[], int size)
+{
+    for (int i = 0; i < size; i++) {
+        printf("%d: %d\n", i, array[i]);
+    }
+}
