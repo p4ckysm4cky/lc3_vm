@@ -83,13 +83,34 @@ void update_flags(uint16_t r)
 }
 
 
+void op_add(uint16_t instr)
+{
+    // Destination register
+    uint16_t dr = (instr >> 9) & 0x7; // mask of 0111
+    // Source register
+    uint16_t sr1 = (instr >> 6) & 0x7;
+    // Determine if in immediate mode 
+    // by checking the 5th bit
+    uint16_t imm_flag = (instr >> 5) & 1;
+
+    // immediate mode
+    if (imm_flag) {
+        uint16_t imm5 = sign_extend(instr & 0x1F, 5);
+        reg[dr] = reg[sr1] + imm5;
+    }
+    else {
+        uint16_t sr2 = instr & 0x7;
+        reg[dr] = reg[sr1] + reg[sr2];
+    }
+    // Update R_COND after op_add
+    update_flags(dr);
+}
+
 int main(int argc, char* const argv[])
 {
     // Set PC to starting positon of 
     // 0x3000
     uint16_t const PC_START = 0x3000;
     reg[R_PC] = PC_START;
-    test_update_flags(reg, R_R0, 5);
-    test_update_flags(reg, R_R0, 0);
-    test_update_flags(reg, R_R0, -5);
+    test_add(reg);
 }
