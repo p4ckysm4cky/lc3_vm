@@ -1,8 +1,17 @@
 #include <stdio.h>
 #include <stdint.h>
 #include <limits.h>
+#include "lc3.h"
+#include <signal.h> // SIGINT
+/* windows only */
+#include <Windows.h>
+#include <conio.h>  // _kbhit
+/* for debugging */
 #include "debug_tools.h"
 #include "test_functions.h"
+
+
+HANDLE hStdin = INVALID_HANDLE_VALUE;
 
 
 // Memory 0 -> 65535 = 65536 locations
@@ -56,6 +65,15 @@ enum
     FL_NEG = 1 << 2, // Negative
 };
 
+// Memory Mapped Registers
+enum
+{
+    // KBSR indicates whether a key has been pressed
+    MR_KBSR = 0xFE00, // Memory address of keyboard status
+    // KBDR identifies which key was pressed
+    MR_KBDR = 0xFE02 //  Memory address of keyboard data
+};
+
 /* Extends a value less than 16 bit to be 
 correctly represented in a signed 16 bit format */
 uint16_t sign_extend(uint16_t x, int bit_count)
@@ -105,6 +123,43 @@ void op_add(uint16_t instr)
     // Update R_COND after op_add
     update_flags(dr);
 }
+
+
+/* Our setter function to write to memory */
+void mem_write(uint16_t address, uint16_t val)
+{
+    memory[address] = val;
+}
+
+
+/* Our getter function to read from memory */
+uint16_t mem_read(uint16_t address)
+{
+    /* "If address we're reading is the keyboard status register, 
+    we'll enter this 'keyboard handling mode' where we'll write the status
+    and the keyboard data to the special registers"
+    */
+    if (address == MR_KBSR) {
+        // Check if received new character from input
+        if (check_key()) {
+            // set Bit[15] when input received a new character
+            memory[MR_KBSR] = (1 << 15);
+            // sets KBDR to the latest character inputted
+            memory[MR_KBDR] = getchar(); 
+        }
+        else {
+            memory[MR_KBSR] = 0;
+        }
+    }
+    return memory[address];
+}
+
+
+uint16_t check_key()
+{
+    return WaitForSingleObject(hStdin, 1000) == WAIT_OBJECT_0 && _kbhit();
+}
+
 
 int main(int argc, char* const argv[])
 {
