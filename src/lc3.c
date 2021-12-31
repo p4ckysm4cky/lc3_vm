@@ -148,6 +148,7 @@ uint16_t mem_read(uint16_t address)
             memory[MR_KBDR] = getchar(); 
         }
         else {
+            // indicates no new character was received
             memory[MR_KBSR] = 0;
         }
     }
