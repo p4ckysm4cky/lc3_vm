@@ -13,3 +13,6 @@ test_functions.o: test_functions.c test_functions.h
 # Change this if using *nix os
 clean:
 	del *.o
+
+debug:
+	gcc -g lc3.c test_functions.c debug_tools.c -o lc3

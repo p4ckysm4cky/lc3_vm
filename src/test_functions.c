@@ -59,3 +59,20 @@ void test_add(uint16_t reg[])
     print_16bit(reg[R_COND]);
 
 }
+
+
+void test_ldi(uint16_t reg[])
+{
+    // far_data
+    mem_write(0x3456, 48);
+    // pointer to far_data
+    mem_write(0x3002, 0x3456);
+    /*  DR = R_R6 = 110
+        PC = 0x3000
+        PCoffset9 = 0x002 = 0 0000 0010   
+    */
+    uint16_t instr = 0b1010110000000010;
+    op_ldi(instr);
+    print_16bit(reg[6]);
+    printf("%d\n", reg[6]);
+}

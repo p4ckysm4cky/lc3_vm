@@ -101,30 +101,6 @@ void update_flags(uint16_t r)
 }
 
 
-void op_add(uint16_t instr)
-{
-    // Destination register
-    uint16_t dr = (instr >> 9) & 0x7; // mask of 0111
-    // Source register
-    uint16_t sr1 = (instr >> 6) & 0x7;
-    // Determine if in immediate mode 
-    // by checking the 5th bit
-    uint16_t imm_flag = (instr >> 5) & 1;
-
-    // immediate mode
-    if (imm_flag) {
-        uint16_t imm5 = sign_extend(instr & 0x1F, 5);
-        reg[dr] = reg[sr1] + imm5;
-    }
-    else {
-        uint16_t sr2 = instr & 0x7;
-        reg[dr] = reg[sr1] + reg[sr2];
-    }
-    // Update R_COND after op_add
-    update_flags(dr);
-}
-
-
 /* Our setter function to write to memory */
 void mem_write(uint16_t address, uint16_t val)
 {
@@ -162,11 +138,48 @@ uint16_t check_key()
 }
 
 
+void op_add(uint16_t instr)
+{
+    // Destination register
+    uint16_t dr = (instr >> 9) & 0x7; // mask of 0111
+    // Source register
+    uint16_t sr1 = (instr >> 6) & 0x7;
+    // Determine if in immediate mode 
+    // by checking the 5th bit
+    uint16_t imm_flag = (instr >> 5) & 1;
+
+    // immediate mode
+    if (imm_flag) {
+        uint16_t imm5 = sign_extend(instr & 0x1F, 5);
+        reg[dr] = reg[sr1] + imm5;
+    }
+    else {
+        uint16_t sr2 = instr & 0x7;
+        reg[dr] = reg[sr1] + reg[sr2];
+    }
+    // Update R_COND after op_add
+    update_flags(dr);
+}
+
+
+void op_ldi(uint16_t instr)
+{
+    // Destination register
+    uint16_t dr = (instr >> 9) & 0x7;
+    // Extend PCoffset9 to 16bit
+    uint16_t pc_offset = sign_extend(instr & 0x1FF, 9);
+    // Get final address from adding PCoffset9 to PC
+    // and accessing the memory address stored at that location
+    uint16_t final_mem = mem_read(reg[R_PC] + pc_offset);
+    reg[dr] = mem_read(final_mem);
+}
+
+
 int main(int argc, char* const argv[])
 {
     // Set PC to starting positon of 
     // 0x3000
     uint16_t const PC_START = 0x3000;
     reg[R_PC] = PC_START;
-    test_add(reg);
+    test_ldi(reg);
 }
