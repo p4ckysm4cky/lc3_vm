@@ -89,3 +89,27 @@ void test_ld(uint16_t reg[])
    op_ld(instr);
    printf("%d\n", reg[4]);
 }
+
+
+void test_and(uint16_t reg[])
+{
+    // AND R2, R3, R4
+    reg[3] = ~0; // 10 0011
+    reg[4] = ~0; //  1 0101
+    uint16_t instr = 0b0101010011000100;
+    op_and(instr);
+    print_16bit(reg[3]);
+    print_16bit(reg[4]);
+    printf("&\n");
+    print_16bit(reg[2]);
+    printf("==========================\n");
+    printf("imm5 test\n");
+    // AND R2, R3, #7
+    reg[3] = 14; // 1100
+    instr = 0b0101010011101110;
+    op_and(instr);
+    print_16bit(reg[3]);
+    print_16bit(14);
+    printf("&\n");
+    print_16bit(reg[2]);
+}

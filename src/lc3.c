@@ -162,6 +162,24 @@ void op_add(uint16_t instr)
 }
 
 
+void op_and(uint16_t instr)
+{
+    uint16_t dr = (instr >> 9) & 0x7;
+    uint16_t sr1 = (instr >> 6) & 0x7;
+    uint16_t imm_flag = (instr >> 5) & 1;
+
+    if (imm_flag) {
+        uint16_t imm5 = sign_extend(instr & 0x1F, 5);
+        reg[dr] = reg[sr1] & imm5;
+    }
+    else {
+        uint16_t sr2 = instr & 0x7;
+        reg[dr] = reg[sr1] & reg[sr2];
+    }
+    update_flags(dr);
+}
+
+
 void op_ld(uint16_t instr)
 {
     // Destination register
@@ -192,5 +210,5 @@ int main(int argc, char* const argv[])
     // 0x3000
     uint16_t const PC_START = 0x3000;
     reg[R_PC] = PC_START;
-    test_ld(reg);
+    test_and(reg);
 }
