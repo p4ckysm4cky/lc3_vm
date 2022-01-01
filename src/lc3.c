@@ -180,6 +180,23 @@ void op_and(uint16_t instr)
 }
 
 
+void op_br(uint16_t instr)
+{
+    uint16_t pc_offset = sign_extend(instr & 0x1FF, 9);
+    uint16_t n = (instr >> 11) & 1;
+    uint16_t z = (instr >> 10) & 1;
+    uint16_t p = (instr >> 9) & 1;
+    
+    uint16_t cond_neg = reg[R_COND] == FL_NEG;
+    uint16_t cond_zro = reg[R_COND] == FL_ZRO;
+    uint16_t cond_pos = reg[R_COND] == FL_POS;
+
+    if ((n && cond_neg) || (z && cond_zro) || (p && cond_pos)) {
+        reg[R_PC] += pc_offset;
+    }
+}
+
+
 void op_ld(uint16_t instr)
 {
     // Destination register
@@ -210,5 +227,5 @@ int main(int argc, char* const argv[])
     // 0x3000
     uint16_t const PC_START = 0x3000;
     reg[R_PC] = PC_START;
-    test_and(reg);
+    test_br(reg);
 }

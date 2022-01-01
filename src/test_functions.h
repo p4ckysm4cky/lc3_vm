@@ -7,5 +7,6 @@ void test_add(uint16_t reg[]);
 void test_ldi(uint16_t reg[]);
 void test_ld(uint16_t reg[]);
 void test_and(uint16_t reg[]);
+void test_br(uint16_t reg[]);
 
 #endif

@@ -113,3 +113,20 @@ void test_and(uint16_t reg[])
     printf("&\n");
     print_16bit(reg[2]);
 }
+
+
+void test_br(uint16_t reg[])
+{
+    int R_PC = 8;
+    printf("PC: %x\n", reg[R_PC]);
+    // increment 1 to R_R0
+    uint16_t increment_instr = 0b0001000000100001;
+    op_add(increment_instr);
+    // expect PC to be at 0x3024
+    uint16_t instr = 0b0000001000100100;
+    op_br(instr);
+    printf("PC: %x\n", reg[R_PC]);
+    instr = 0b0000100000100100;
+    op_br(instr);
+    printf("PC: %x\n", reg[R_PC]);
+}
