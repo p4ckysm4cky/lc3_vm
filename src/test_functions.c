@@ -69,10 +69,23 @@ void test_ldi(uint16_t reg[])
     mem_write(0x3002, 0x3456);
     /*  DR = R_R6 = 110
         PC = 0x3000
-        PCoffset9 = 0x002 = 0 0000 0010   
+        PCoffset9 = 2 = 0 0000 0010   
     */
     uint16_t instr = 0b1010110000000010;
     op_ldi(instr);
     print_16bit(reg[6]);
     printf("%d\n", reg[6]);
+}
+
+
+void test_ld(uint16_t reg[])
+{
+    // PC = 0x3000
+    mem_write(0x30FF, 130);
+    /*  DR = R_R4
+        PCoffset = 255 = 0 1111 1111
+    */
+   uint16_t instr = 0b0010100011111111;
+   op_ld(instr);
+   printf("%d\n", reg[4]);
 }

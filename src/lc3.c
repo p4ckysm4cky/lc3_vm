@@ -131,7 +131,7 @@ uint16_t mem_read(uint16_t address)
     return memory[address];
 }
 
-
+/* Determines if the console received a new char */
 uint16_t check_key()
 {
     return WaitForSingleObject(hStdin, 1000) == WAIT_OBJECT_0 && _kbhit();
@@ -162,6 +162,16 @@ void op_add(uint16_t instr)
 }
 
 
+void op_ld(uint16_t instr)
+{
+    // Destination register
+    uint16_t dr = (instr >> 9) & 0x7;
+    uint16_t pc_offset = sign_extend(instr & 0x1FF, 9);
+    reg[dr] = mem_read(reg[R_PC] + pc_offset);
+    update_flags(dr);
+}
+
+
 void op_ldi(uint16_t instr)
 {
     // Destination register
@@ -172,6 +182,7 @@ void op_ldi(uint16_t instr)
     // and accessing the memory address stored at that location
     uint16_t final_mem = mem_read(reg[R_PC] + pc_offset);
     reg[dr] = mem_read(final_mem);
+    update_flags(dr);
 }
 
 
@@ -181,5 +192,5 @@ int main(int argc, char* const argv[])
     // 0x3000
     uint16_t const PC_START = 0x3000;
     reg[R_PC] = PC_START;
-    test_ldi(reg);
+    test_ld(reg);
 }
