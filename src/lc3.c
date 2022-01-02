@@ -197,6 +197,13 @@ void op_br(uint16_t instr)
 }
 
 
+void op_jmp(uint16_t instr)
+{
+    uint16_t base_r = (instr >> 6) & 0x7;
+    reg[R_PC] = reg[base_r];
+}
+
+
 void op_ld(uint16_t instr)
 {
     // Destination register
@@ -227,5 +234,5 @@ int main(int argc, char* const argv[])
     // 0x3000
     uint16_t const PC_START = 0x3000;
     reg[R_PC] = PC_START;
-    test_br(reg);
+    test_jmp(reg);
 }

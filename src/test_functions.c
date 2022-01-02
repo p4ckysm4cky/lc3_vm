@@ -130,3 +130,16 @@ void test_br(uint16_t reg[])
     op_br(instr);
     printf("PC: %x\n", reg[R_PC]);
 }
+
+
+void test_jmp(uint16_t reg[])
+{
+    // Check if working correctly using debugger
+    uint16_t instr;
+    reg[2] = 0x3025;
+    instr = 0b1100000010000000;
+    op_jmp(instr);
+    reg[7] = 0x4035;
+    instr = 0b1100000111000000;
+    op_jmp(instr);  
+}
