@@ -157,3 +157,14 @@ void test_jsr(uint16_t reg[])
     instr = 0b0100000011000000;
     op_jsr(instr);
 }
+
+
+void test_ldr(uint16_t reg[])
+{
+    // R4, R2, #-5
+    reg[2] = 0x3048;
+    mem_write(0x3043, 12345);
+    uint16_t instr = 0b0110100010111011;
+    op_ldr(instr);
+    printf("%d", reg[4]);
+}
