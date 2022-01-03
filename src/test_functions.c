@@ -143,3 +143,17 @@ void test_jmp(uint16_t reg[])
     instr = 0b1100000111000000;
     op_jmp(instr);  
 }
+
+
+void test_jsr(uint16_t reg[])
+{
+    uint16_t instr;
+    // JSR, PC -> 0x33FF
+    instr = 0b0100101111111111;
+    op_jsr(instr);
+
+    // JSRR, R_R3
+    reg[3] = 0x4038;
+    instr = 0b0100000011000000;
+    op_jsr(instr);
+}

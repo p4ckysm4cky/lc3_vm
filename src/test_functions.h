@@ -9,5 +9,6 @@ void test_ld(uint16_t reg[]);
 void test_and(uint16_t reg[]);
 void test_br(uint16_t reg[]);
 void test_jmp(uint16_t reg[]);
+void test_jsr(uint16_t reg[]);
 
 #endif
