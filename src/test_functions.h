@@ -11,5 +11,6 @@ void test_br(uint16_t reg[]);
 void test_jmp(uint16_t reg[]);
 void test_jsr(uint16_t reg[]);
 void test_ldr(uint16_t reg[]);
+void test_lea(uint16_t reg[]);
 
 #endif

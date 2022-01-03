@@ -168,3 +168,13 @@ void test_ldr(uint16_t reg[])
     op_ldr(instr);
     printf("%d", reg[4]);
 }
+
+
+void test_lea(uint16_t reg[])
+{
+    // PC default 0x3000
+    // LEA R4, 0x8f
+    uint16_t instr = 0b1110100010001111;
+    op_lea(instr);
+    printf("%x", reg[4]);
+}
