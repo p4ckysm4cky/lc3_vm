@@ -268,11 +268,17 @@ void op_not(uint16_t instr)
 }
 
 
+void op_ret(uint16_t instr)
+{
+    reg[R_PC] = reg[R_R7];
+}
+
+
 int main(int argc, char* const argv[])
 {
     // Set PC to starting positon of 
     // 0x3000
     uint16_t const PC_START = 0x3000;
     reg[R_PC] = PC_START;
-    test_not(reg);
+    test_ret(reg);
 }

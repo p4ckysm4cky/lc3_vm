@@ -190,3 +190,15 @@ void test_not(uint16_t reg[])
     op_not(instr);
     print_16bit(reg[4]);
 }
+
+
+void test_ret(uint16_t reg[])
+{
+    int R_PC = 8;
+    printf("%x\n", reg[R_PC]);
+    reg[7] = 0x3045;
+    uint16_t instr = 0b1100000111000000;
+    op_ret(instr);
+    printf("%x\n", reg[R_PC]);
+
+}
