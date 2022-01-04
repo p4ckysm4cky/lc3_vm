@@ -200,5 +200,14 @@ void test_ret(uint16_t reg[])
     uint16_t instr = 0b1100000111000000;
     op_ret(instr);
     printf("%x\n", reg[R_PC]);
+}
 
+
+void test_st(uint16_t reg[])
+{
+    // ST R4 0x8f
+    reg[4] = 12345;
+    uint16_t instr = 0b0011100010001111;
+    op_st(instr);
+    printf("%d", mem_read(0x308f));
 }
