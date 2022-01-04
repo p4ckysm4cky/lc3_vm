@@ -259,11 +259,20 @@ void op_lea(uint16_t instr)
 }
 
 
+void op_not(uint16_t instr)
+{
+    uint16_t dr = (instr >> 9) & 0x7;
+    uint16_t sr = (instr >> 6) & 0x7;
+    reg[dr] = ~ reg[sr];
+    update_flags(dr);
+}
+
+
 int main(int argc, char* const argv[])
 {
     // Set PC to starting positon of 
     // 0x3000
     uint16_t const PC_START = 0x3000;
     reg[R_PC] = PC_START;
-    test_lea(reg);
+    test_not(reg);
 }

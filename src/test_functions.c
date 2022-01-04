@@ -175,6 +175,18 @@ void test_lea(uint16_t reg[])
     // PC default 0x3000
     // LEA R4, 0x8f
     uint16_t instr = 0b1110100010001111;
+    int R_COND = 9;
     op_lea(instr);
-    printf("%x", reg[4]);
+    printf("%x\n", reg[4]);
+    print_16bit(reg[R_COND]);
+}
+
+void test_not(uint16_t reg[])
+{
+    reg[2] = 3024;
+    print_16bit(reg[2]);
+    // NOT R4, R2
+    uint16_t instr = 0b1001100010111111;
+    op_not(instr);
+    print_16bit(reg[4]);
 }

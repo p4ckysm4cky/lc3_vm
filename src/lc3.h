@@ -17,5 +17,6 @@ void op_jmp(uint16_t instr);
 void op_jsr(uint16_t instr);
 void op_ldr(uint16_t instr);
 void op_lea(uint16_t instr);
+void op_not(uint16_t instr);
 
 #endif
