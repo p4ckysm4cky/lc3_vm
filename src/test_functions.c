@@ -222,3 +222,15 @@ void test_sti(uint16_t reg[])
     op_sti(instr);
     printf("%d", mem_read(0x4038));
 }
+
+
+void test_str(uint16_t reg[])
+{
+    // STR R4, R2, #5
+    // BaseR = 0x4083
+    reg[4] = 1337;
+    reg[2] = 0x4083;
+    uint16_t instr = 0b0111100010000101;
+    op_str(instr);
+    printf("%d", mem_read(0x4088));
+}

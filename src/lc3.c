@@ -291,11 +291,20 @@ void op_sti(uint16_t instr)
 }
 
 
+void op_str(uint16_t instr)
+{
+    uint16_t sr = (instr >> 9) & 0x7;
+    uint16_t base_r = (instr >> 6) & 0x7; 
+    uint16_t offset = sign_extend(instr & 0x3F, 6);
+    mem_write(reg[base_r] + offset, reg[sr]);
+}
+
+
 int main(int argc, char* const argv[])
 {
     // Set PC to starting positon of 
     // 0x3000
     uint16_t const PC_START = 0x3000;
     reg[R_PC] = PC_START;
-    test_sti(reg);
+    test_str(reg);
 }
