@@ -20,5 +20,6 @@ void op_lea(uint16_t instr);
 void op_not(uint16_t instr);
 void op_ret(uint16_t instr);
 void op_st(uint16_t instr);
+void op_sti(uint16_t instr);
 
 #endif

@@ -211,3 +211,14 @@ void test_st(uint16_t reg[])
     op_st(instr);
     printf("%d", mem_read(0x308f));
 }
+
+
+void test_sti(uint16_t reg[])
+{
+    // sti r4, 0x24
+    reg[4] = 4321;
+    mem_write(0x3024, 0x4038);
+    uint16_t instr = 0b1011100000100100;
+    op_sti(instr);
+    printf("%d", mem_read(0x4038));
+}
