@@ -74,6 +74,19 @@ enum
     MR_KBDR = 0xFE02 //  Memory address of keyboard data
 };
 
+
+// Trap codes
+enum
+{
+    TRAP_GETC = 0x20,  /* get character from keyboard, not echoed onto the terminal */
+    TRAP_OUT = 0x21,   /* output a character */
+    TRAP_PUTS = 0x22,  /* output a word string */
+    TRAP_IN = 0x23,    /* get character from keyboard, echoed onto the terminal */
+    TRAP_PUTSP = 0x24, /* output a byte string */
+    TRAP_HALT = 0x25   /* halt the program */
+};
+
+
 /* Extends a value less than 16 bit to be 
 correctly represented in a signed 16 bit format */
 uint16_t sign_extend(uint16_t x, int bit_count)
@@ -300,11 +313,30 @@ void op_str(uint16_t instr)
 }
 
 
+void trap_puts(uint16_t instr)
+{
+    // get char by adding address stored in R_R0
+    // to the address of the first item in 
+    // memory array
+    uint16_t *c = memory + reg[R_R0];
+    // Run until reached null
+    while (*c)
+    {
+        // explicit type conversion to char
+        // then write to stdout buffer
+        putc((char)*c, stdout);
+        ++c;
+    }
+    // flush the buffer of stdout
+    fflush(stdout);
+}
+
+
 int main(int argc, char* const argv[])
 {
     // Set PC to starting positon of 
     // 0x3000
     uint16_t const PC_START = 0x3000;
     reg[R_PC] = PC_START;
-    test_str(reg);
+    test_puts(reg);
 }

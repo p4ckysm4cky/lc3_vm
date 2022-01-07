@@ -234,3 +234,16 @@ void test_str(uint16_t reg[])
     op_str(instr);
     printf("%d", mem_read(0x4088));
 }
+
+
+void test_puts(uint16_t reg[])
+{
+    reg[0] = 0x0005;
+    mem_write(0x0005, 'H');
+    mem_write(0x0006, 'e');
+    mem_write(0x0007, 'l');
+    mem_write(0x0008, 'l');
+    mem_write(0x0009, 'o');
+    uint16_t instr = 0b1111000000100010;
+    trap_puts(instr);
+}
