@@ -19,5 +19,6 @@ void test_sti(uint16_t reg[]);
 void test_str(uint16_t reg[]);
 void test_puts(uint16_t reg[]);
 void test_getc(uint16_t reg[]);
+void test_out(uint16_t reg[]);
 
 #endif

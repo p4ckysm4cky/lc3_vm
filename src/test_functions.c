@@ -255,3 +255,10 @@ void test_getc(uint16_t reg[])
     trap_getc(123); // random numbers
     print_16bit(reg[0]);
 }
+
+
+void test_out(uint16_t reg[])
+{
+    trap_getc(0);
+    trap_out(0);
+}
