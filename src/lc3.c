@@ -313,6 +313,13 @@ void op_str(uint16_t instr)
 }
 
 
+void trap_getc(uint16_t instr)
+{
+    reg[R_R0] = (uint16_t) getchar();
+    reg[R_R0] &= 0xFF;
+}
+
+
 void trap_puts(uint16_t instr)
 {
     // get char by adding address stored in R_R0
@@ -338,5 +345,5 @@ int main(int argc, char* const argv[])
     // 0x3000
     uint16_t const PC_START = 0x3000;
     reg[R_PC] = PC_START;
-    test_puts(reg);
+    test_getc(reg);
 }

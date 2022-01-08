@@ -247,3 +247,11 @@ void test_puts(uint16_t reg[])
     uint16_t instr = 0b1111000000100010;
     trap_puts(instr);
 }
+
+
+void test_getc(uint16_t reg[])
+{
+    print_16bit(reg[0]);
+    trap_getc(123); // random numbers
+    print_16bit(reg[0]);
+}
