@@ -377,6 +377,14 @@ void trap_putsp(uint16_t instr)
     fflush(stdout);
 }
 
+// super questionnable since it does not include the
+// running = 0 line in the function
+void trap_halt(uint16_t instr)
+{
+    puts("HALT");
+    fflush(stdout);
+}
+
 
 int main(int argc, char* const argv[])
 {
@@ -384,5 +392,85 @@ int main(int argc, char* const argv[])
     // 0x3000
     uint16_t const PC_START = 0x3000;
     reg[R_PC] = PC_START;
-    test_putsp(reg);
+    
+    int running = 1;
+    while (running)
+    {
+        /* FETCH */
+        uint16_t instr = mem_read(reg[R_PC]++);
+        uint16_t op = instr >> 12;
+
+        switch (op)
+        {
+            case OP_ADD:
+                op_add(instr);
+                break;
+            case OP_AND:
+                op_and(instr);
+                break;
+            case OP_NOT:
+                op_not(instr);
+                break;
+            case OP_BR:
+                op_br(instr);
+                break;
+            case OP_JMP:
+                op_jmp(instr);
+                break;
+            case OP_JSR:
+                op_jsr(instr);
+                break;
+            case OP_LD:
+                op_ld(instr);
+                break;
+            case OP_LDI:
+                op_ldi(instr);
+                break;
+            case OP_LDR:
+                op_ldr(instr);
+                break;
+            case OP_LEA:
+                op_lea(instr);
+                break;
+            case OP_ST:
+                op_st(instr);
+                break;
+            case OP_STI:
+                op_sti(instr);
+                break;
+            case OP_STR:
+                op_str(instr);
+                break;
+            case OP_TRAP:
+                switch (instr & 0xFF)
+                {
+                    case TRAP_GETC:
+                        trap_getc(0);
+                        break;
+                    case TRAP_OUT:
+                        trap_out(0);
+                        break;
+                    case TRAP_PUTS:
+                        trap_puts(0);
+                        break;
+                    case TRAP_IN:
+                        trap_in(0);
+                        break;
+                    case TRAP_PUTSP:
+                        trap_putsp(0);
+                        break;
+                    case TRAP_HALT:
+                        trap_halt(0);
+                        running = 0;
+                        break;
+                }
+                break;
+            case OP_RES:
+            case OP_RTI:
+            default:
+                abort();
+                break;
+        }
+    }
+    // Shutdown here
 }
