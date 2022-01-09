@@ -268,3 +268,13 @@ void test_in(uint16_t reg[])
 {
     trap_in(0);
 }
+
+
+void test_putsp(uint16_t reg[])
+{
+    reg[0] = 0x0005;
+    mem_write(0x005, 0x6548); // eH
+    mem_write(0x006, 0x6c6c); // ll
+    mem_write(0x007, 0x006f); // o
+    trap_putsp(0);
+}

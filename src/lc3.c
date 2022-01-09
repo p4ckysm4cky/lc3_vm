@@ -358,11 +358,31 @@ void trap_in(uint16_t instr)
 }
 
 
+void trap_putsp(uint16_t instr)
+{
+    // get char by adding address stored in R_R0
+    // to the address of the first item in 
+    // memory array
+    uint16_t *c = memory + reg[R_R0];
+    // Run until reached null
+    while (*c) {
+        char char1 = (*c) & 0xFF;
+        putchar(char1);
+        char char2 = (*c) >> 8;
+        if (char2) {
+            putchar(char2);
+        }
+        ++c;
+    }
+    fflush(stdout);
+}
+
+
 int main(int argc, char* const argv[])
 {
     // Set PC to starting positon of 
     // 0x3000
     uint16_t const PC_START = 0x3000;
     reg[R_PC] = PC_START;
-    test_in(reg);
+    test_putsp(reg);
 }
