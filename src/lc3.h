@@ -28,5 +28,11 @@ void trap_out(uint16_t instr);
 void trap_in(uint16_t instr);
 void trap_putsp(uint16_t instr);
 void trap_halt(uint16_t instr);
+void read_image_file(FILE* file);
+uint16_t swap16(uint16_t x);
+void disable_input_buffering();
+void restore_input_buffering();
+void handle_interrupt(int signal);
+void setup(void);
 
 #endif

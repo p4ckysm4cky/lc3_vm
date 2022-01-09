@@ -86,6 +86,44 @@ enum
     TRAP_HALT = 0x25   /* halt the program */
 };
 
+/* Loading Programs */
+// This is the part where I'm quite confused about
+void read_image_file(FILE* file)
+{
+    /* the origin tells us where in memory to place the image */
+    uint16_t origin;
+    fread(&origin, sizeof(origin), 1, file);
+    origin = swap16(origin);
+
+    /* we know the maximum file size so we only need one fread */
+    uint16_t max_read = UINT16_MAX - origin;
+    uint16_t* p = memory + origin;
+    size_t read = fread(p, sizeof(uint16_t), max_read, file);
+
+    /* swap to little endian */
+    while (read-- > 0)
+    {
+        *p = swap16(*p);
+        ++p;
+    }
+}
+
+
+uint16_t swap16(uint16_t x)
+{
+    return (x << 8) | (x >> 8);
+}
+
+
+int read_image(const char* image_path)
+{
+    FILE* file = fopen(image_path, "rb");
+    if (!file) { return 0; };
+    read_image_file(file);
+    fclose(file);
+    return 1;
+}
+
 
 /* Extends a value less than 16 bit to be 
 correctly represented in a signed 16 bit format */
@@ -148,6 +186,42 @@ uint16_t mem_read(uint16_t address)
 uint16_t check_key()
 {
     return WaitForSingleObject(hStdin, 1000) == WAIT_OBJECT_0 && _kbhit();
+}
+
+// Input buffering
+
+DWORD fdwMode, fdwOldMode;
+
+void disable_input_buffering()
+{
+    hStdin = GetStdHandle(STD_INPUT_HANDLE);
+    GetConsoleMode(hStdin, &fdwOldMode); /* save old mode */
+    fdwMode = fdwOldMode
+            ^ ENABLE_ECHO_INPUT  /* no input echo */
+            ^ ENABLE_LINE_INPUT; /* return when one or
+                                    more characters are available */
+    SetConsoleMode(hStdin, fdwMode); /* set new mode */
+    FlushConsoleInputBuffer(hStdin); /* clear buffer */
+}
+
+void restore_input_buffering()
+{
+    SetConsoleMode(hStdin, fdwOldMode);
+}
+
+
+void handle_interrupt(int signal)
+{
+    restore_input_buffering();
+    printf("\n");
+    exit(-2);
+}
+
+
+void setup(void)
+{
+    signal(SIGINT, handle_interrupt);
+    disable_input_buffering();
 }
 
 
@@ -381,7 +455,7 @@ void trap_putsp(uint16_t instr)
 // running = 0 line in the function
 void trap_halt(uint16_t instr)
 {
-    puts("HALT");
+    puts("\nHALT");
     fflush(stdout);
 }
 
@@ -392,7 +466,23 @@ int main(int argc, char* const argv[])
     // 0x3000
     uint16_t const PC_START = 0x3000;
     reg[R_PC] = PC_START;
-    
+    if (argc < 2)
+    {
+        /* show usage string */
+        printf("lc3 [image-file1] ...\n");
+        exit(2);
+    }
+
+    for (int j = 1; j < argc; ++j)
+    {
+        if (!read_image(argv[j]))
+        {
+            printf("failed to load image: %s\n", argv[j]);
+            exit(1);
+        }
+    }
+
+    setup();
     int running = 1;
     while (running)
     {
@@ -472,5 +562,6 @@ int main(int argc, char* const argv[])
                 break;
         }
     }
-    // Shutdown here
+    restore_input_buffering();
+    return 0;
 }
