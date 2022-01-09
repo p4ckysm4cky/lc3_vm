@@ -262,3 +262,9 @@ void test_out(uint16_t reg[])
     trap_getc(0);
     trap_out(0);
 }
+
+
+void test_in(uint16_t reg[])
+{
+    trap_in(0);
+}

@@ -347,11 +347,22 @@ void trap_puts(uint16_t instr)
 }
 
 
+void trap_in(uint16_t instr)
+{
+    printf("Enter a character: ");
+    char c = getchar();
+    putchar(c);
+    fflush(stdout);
+    reg[R_R0] = (uint16_t) c;
+    reg[R_R0] &= 0xFF;
+}
+
+
 int main(int argc, char* const argv[])
 {
     // Set PC to starting positon of 
     // 0x3000
     uint16_t const PC_START = 0x3000;
     reg[R_PC] = PC_START;
-    test_out(reg);
+    test_in(reg);
 }

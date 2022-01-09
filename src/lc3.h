@@ -25,5 +25,6 @@ void op_str(uint16_t instr);
 void trap_puts(uint16_t instr);
 void trap_getc(uint16_t instr);
 void trap_out(uint16_t instr);
+void trap_in(uint16_t instr);
 
 #endif
